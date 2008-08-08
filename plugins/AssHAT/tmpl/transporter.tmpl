@@ -1,0 +1,151 @@
+<mt:setvarblock name="page_title"><__trans phrase="Transport Assets"></mt:setvarblock>
+<mt:setvarblock name="html_head" append="1">
+	<style type="text/css" media="screen">
+		.dialog #container, .dialog #content { overflow: visible; }
+		.dialog .actions-bar { position: static; }
+		.readonly, .readonly input { background: #eee; }
+	</style>
+	<script type="text/javascript">
+	<!--
+		function toggleOpts(opt) {
+			hide('files');
+			
+			var checkboxes = document.getElementById('files').getElementsByTagName('input');
+			var ext = document.getElementById('ext').value;
+			var checked = false;
+			
+			if(opt == 'yes')
+				checked = true;	
+					
+			for (var i = 0; i < checkboxes.length; i++) {
+				var cb = checkboxes[i];
+				if(cb.name != 'file')
+					continue;
+					
+				cb.checked = false;
+				
+				if(opt == 'no_ext' && ext && cb.value.match(ext))
+					cb.checked = true;
+				else
+					cb.checked = checked;
+			}
+			
+			if(opt == 'no_choose')
+				show('files');
+				
+			if(opt == 'no_ext')
+				show('ext-field');
+		} 
+		
+		var tableSelect;
+		function init()
+		{
+		    // setup
+		    tableSelect = new TC.TableSelect( "files-listing-table" );
+		    tableSelect.rowSelect = true;
+		}
+
+		TC.attachLoadEvent( init );
+	//-->
+	</script>
+</mt:setvarblock>
+<mt:include name="dialog/header.tmpl">
+
+<form method="post" enctype="multipart/form-data" action="<mt:var name="script_url">">
+    <input type="hidden" name="__mode" value="asshat_transport_assets" />
+    <input type="hidden" name="blog_id" value="<mt:var name="blog_id">" />
+
+    <mtapp:setting
+        id="path"
+        label_class="top-label"
+        label="<__trans phrase="Path">"
+        hint="<__trans phrase="Enter the full path to the file (or directory) you wish to transport">"
+        show_hint="1">
+			<div class="textarea-wrapper<mt:if name="readonly"> readonly</mt:if>"><input type="text" name="path" value="<mt:var name="path" escape="html">" id="path" class="full-width"<mt:if name="readonly"> readonly="true"</mt:if> /></div>
+    </mtapp:setting>
+
+    <mtapp:setting
+        id="rl"
+        label_class="top-label"
+        label="<__trans phrase="URL">"
+        hint="<__trans phrase="Enter a corresponding URL for the above path">"
+        show_hint="1">
+			<div class="textarea-wrapper<mt:if name="readonly"> readonly</mt:if>"><input type="text" name="url" value="<mt:var name="url" escape="html">" id="url" class="full-width"<mt:if name="readonly"> readonly="true"</mt:if> /></div>
+    </mtapp:setting>
+
+	<mt:if name="is_directory">
+		<mtapp:statusmsg
+		 id="is_directory"
+		 class="error">
+			<__trans phrase="The path you have entered is a directory. Would you like to proceed?">
+		</mtapp:statusmsg>
+		
+		<p><label> <input type="radio" name="proceed" value="yes" id="proceed" onclick="toggleOpts(this.value)" /> <__trans phrase="Yes, transport all the files in [_1]" params="<code><mt:var name="path" escape="html"></code>"> </label></p>
+			
+		<p><label> <input type="radio" name="proceed" value="no_choose" id="proceed" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to choose the files to transport"> </label></p>
+		
+		<div id="files" style="display: none; margin: 10px 0;">
+			<mt:loop name="files">
+				<mt:if name="__first__">
+					<div class="listing">
+						<table cellspacing="0" class="files-listing-table compact" id="files-listing-table">
+						    <thead>
+						        <tr>
+						            <th class="cb"><input type="checkbox" name="id-head" value="all" class="select" /></th>
+						            <th><__trans phrase="File Name"></th>
+						        </tr>
+						    </thead>
+						    <tbody>
+				</mt:if>
+
+					        <tr id="<mt:var name="file">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
+					            <td><input type="checkbox" name="file" value="<mt:var name="file">" class="select" /></td> 
+					            <td><mt:var name="file"></td>
+					        </tr>
+
+				<mt:if name="__last__">
+						    </tbody>
+						</table>
+					</div>
+				</mt:if>
+			</mt:loop>
+		</div>
+		
+		<p><label> <input type="radio" name="proceed" value="no_ext" id="proceed" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to only transport files with a particular extension"> </label></p>
+		
+		<div class="textarea-wrapper" id="ext-field" style="display: none; width: 60px;">.<input type="text" name="ext" value="<mt:var name="ext" escape="html">" id="ext" style="width: 50px" onblur="toggleOpts('no_ext');" /></div>
+		
+	</mt:if>
+
+    <div class="actions-bar">
+        <div class="actions-bar-inner pkg actions">
+			<img src="<mt:staticwebpath>images/indicator.white.gif" id="indicator" alt="" title="" style="float: left; display: none;" />
+			<mt:if name="button" eq="continue">
+            <button
+                type="submit"
+                accesskey="s"
+                title="<__trans phrase="Continue (s)">"
+                class="primary-button"
+				id="continue-button"
+                ><__trans phrase="Continue"></button>
+			<mt:else>
+            <button
+                type="submit"
+                accesskey="s"
+                title="<__trans phrase="Transport (s)">"
+                class="primary-button"
+				id="transport-button"
+                ><__trans phrase="Transport"></button>
+			</mt:if>
+            <button
+                onclick="closeDialog(); return false"
+                type="submit"
+                accesskey="x"
+                title="<__trans phrase="Cancel (x)">"
+                ><__trans phrase="Cancel"></button>
+        </div>
+    </div>
+
+</form>
+
+<mt:include name="dialog/footer.tmpl">
