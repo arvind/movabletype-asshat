@@ -9,10 +9,10 @@
     </mt:if>
 </mt:setvarblock>
 <mt:setvarblock name="html_head" append="1">
-	<style type="text/css">
-		#as-file-name, .as-file-name { width: 25%; }
-		.field { border: 0; }
-	</style>	
+    <style type="text/css">
+        #as-file-name, .as-file-name { width: 25%; }
+        .field { border: 0; }
+    </style>    
 </mt:setvarblock>
 <mt:setvarblock name="action_buttons">
     <a href="javascript:void(0)" mt:command="submit" mt:mode="save_assets" accesskey="s"
@@ -35,8 +35,8 @@
     </mt:if>
             <tr id="asset-<mt:var name="id">" class="<mt:if name="__odd__">odd<mt:else>even</mt:if>">
                 <td class="as-file-name">
-					<input type="hidden" name="id" value="<mt:var name="id">" id="id" />
-					<input type="hidden" id="asset-<mt:var name="id">-json" value="<mt:var name="metadata_json" escape="html">" />
+                    <input type="hidden" name="id" value="<mt:var name="id">" id="id" />
+                    <input type="hidden" id="asset-<mt:var name="id">-json" value="<mt:var name="metadata_json" escape="html">" />
     <mt:unless name="file_is_missing">
                     <a href="javascript:void(0)" onclick="return toggleAssetDetails('<mt:var name="id">');" title="<$mt:var name="file_name"$>"><$mt:var name="file_label" escape="html" default="$file_name"$></a>
     <mt:else>
@@ -47,34 +47,34 @@
                     </div>
                 </td>
                 <td class="as-asset-deets">
-					<div style="float:left; margin-right: 20px; width: 45%;">
-					<mtapp:setting
-				        id="file_name"
-				        label_class="top-label"
-				        label="<__trans phrase="Name">">
-				            <div class="textarea-wrapper">
-				                <input type="text" name="label_<mt:var name="id">" value="<mt:var name="label" escape="html">" class="full-width" />
-				            </div>
-				    </mtapp:setting>
-				
-					<mtapp:setting
-				        id="tags"
-				        label_class="top-label"
-				        label="<__trans phrase="Tags">">
-				            <div class="textarea-wrapper">
-				                <input type="text" name="tags_<mt:var name="id">" value="<mt:var name="tags" escape="html">" class="full-width" />
-				            </div>
-				    </mtapp:setting>
-					</div>
-					
-					<div style="float:left; margin-right: 3px; width: 49%;">
-						<mtapp:setting
-					        id="description"
-					        label_class="top-label"
-					        label="<__trans phrase="Description">">
-					            <textarea name="description_<mt:var name="id">" id="description_<mt:var name="id">" class="full-width" rows="4"><mt:var name="description"></textarea>
-					    </mtapp:setting>
-					</div>
+                    <div style="float:left; margin-right: 20px; width: 45%;">
+                    <mtapp:setting
+                        id="file_name"
+                        label_class="top-label"
+                        label="<__trans phrase="Name">">
+                            <div class="textarea-wrapper">
+                                <input type="text" name="label_<mt:var name="id">" value="<mt:var name="label" escape="html">" class="full-width" />
+                            </div>
+                    </mtapp:setting>
+                
+                    <mtapp:setting
+                        id="tags"
+                        label_class="top-label"
+                        label="<__trans phrase="Tags">">
+                            <div class="textarea-wrapper">
+                                <input type="text" name="tags_<mt:var name="id">" value="<mt:var name="tags" escape="html">" class="full-width" />
+                            </div>
+                    </mtapp:setting>
+                    </div>
+                    
+                    <div style="float:left; margin-right: 3px; width: 49%;">
+                        <mtapp:setting
+                            id="description"
+                            label_class="top-label"
+                            label="<__trans phrase="Description">">
+                                <textarea name="description_<mt:var name="id">" id="description_<mt:var name="id">" class="full-width" rows="4"><mt:var name="description"></textarea>
+                        </mtapp:setting>
+                    </div>
                 </td>
             </tr>
     <mt:if __last__>
