@@ -6,8 +6,8 @@ use MT::Util qw( format_ts relative_date );
 use MT 4;
 
 sub open_batch_editor {
-    my $plugin = shift;
     my ($app) = @_;
+    my $plugin = MT->component('AssHAT');
     
     my @ids = $app->param('id');
     my $blog_id = $app->param('blog_id');
@@ -88,8 +88,8 @@ sub open_batch_editor {
 }
 
 sub save_assets {
-    my $plugin = shift;
     my ($app) = @_;
+    my $plugin = MT->component('AssHAT');
     
     my @ids = $app->param('id');
     my $blog_id = $app->param('blog_id');
