@@ -11,7 +11,7 @@ author_name: Arvind Satyanarayan
 author_link: http://www.movalog.com/
 plugin_link: http://plugins.movalog.com/asshat/
 doc_link: http://plugins.movalog.com/asshat/
-description: AssHAT allows you to mass manage assets in Movable Type
+description: AssHAT allows you to mass import and manage assets in Movable Type
 
 callbacks:
     MT::App::CMS::template_source.list_asset: $AssHAT::AssHAT::App::CMS::list_asset_src

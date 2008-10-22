@@ -126,28 +126,30 @@ sub start_transporter {
 sub transport {
     my ($app) = @_;
     my $q = $app->param;
-    my $plugin = MT->component('AssHAT');
     
-    my $path = $q->param('path');
-    my $url = $q->param('url');
-    my $blog_id = $q->param('blog_id');
     require MT::Blog;
-    my $blog = MT::Blog->load($blog_id);
+    my $blog_id = $q->param('blog_id')
+        or return $app->error('No blog in context for asset import');
+
+    my $blog    = MT::Blog->load($blog_id);
+    my $path    = $q->param('path');
+    my $url     = $q->param('url');
+    my $plugin  = MT->component('AssHAT');
     
-    my $param = {
-        blog_id => $blog_id,
-        button => 'continue',
-        path => $path,
-        url => $url,
-        readonly => 1,
+    my $param   = {
+        blog_id   => $blog_id,
+        button    => 'continue',
+        path      => $path,
+        url       => $url,
+        readonly  => 1,
         blog_name => $blog->name
     };
 
-    if(-d $path){ 
+    if (-d $path){ 
         my @files = $q->param('file');
         
         # This happens on the first step
-        if(!@files) {
+        if ( !@files ) {
             $param->{is_directory} = 1;
             my @files;
             opendir(DIR, $path) or die "Can't open $path: $!";
@@ -156,7 +158,7 @@ sub transport {
                 push @files, { file => $file };
             }
             closedir(DIR);
-            
+
             @files = sort { $a->{file} cmp $b->{file} } @files; 
             $param->{files} = \@files;      
         } else {
@@ -165,7 +167,7 @@ sub transport {
             $path .= '/' unless $path =~ m!/$!; 
             $url .= '/' unless $url =~ m!/$!; 
             
-            &print_transport_progress($plugin, $app, 'start');
+            print_transport_progress($plugin, $app, 'start');
             
             foreach my $file (@files) {
                 next if -d $path.$file; # Skip any subdirectories for now
@@ -178,21 +180,22 @@ sub transport {
                     full_path => $path.$file,
                     full_url => $url.$file
                 });
-                $app->print($plugin->translate("Transported '[_1]'\n", $path.$file));
+                $app->print($plugin->translate("Transported '[_1]'\n",
+                    $path.$file));
             }   
             
-            &print_transport_progress($plugin, $app, 'end');        
+            print_transport_progress($plugin, $app, 'end');        
         } 
     } else {
-        &print_transport_progress($plugin, $app, 'start');
+        print_transport_progress($plugin, $app, 'start');
         
         _process_transport($app, {
             full_path => $path,
             full_url => $url
         }); 
-        $app->print($plugin->translate("Transported '[_1]'\n", $path)); 
+        $app->print($plugin->translate("Imported '[_1]'\n", $path)); 
         
-        &print_transport_progress($plugin, $app, 'end');
+        print_transport_progress($plugin, $app, 'end');
     }
     
     return $app->build_page($plugin->load_tmpl('transporter.tmpl'), $param);
@@ -202,17 +205,17 @@ sub _process_transport {
     my $app = shift;
     my ($param) = @_;
     
-    my $blog_id = $app->param('blog_id');
     require MT::Blog;
-    my $blog = MT::Blog->load($blog_id);
-    
+    my $blog_id    = $app->param('blog_id');
+    my $blog       = MT::Blog->load($blog_id);
     my $local_file = $param->{full_path};
-    my $url = $param->{full_url};   
-    my $bytes = -s $local_file;
+    my $url        = $param->{full_url};   
+    my $bytes      = -s $local_file;
 
     require File::Basename;
     my $local_basename = File::Basename::basename($local_file);
-    my $ext = ( File::Basename::fileparse( $local_file, qr/[A-Za-z0-9]+$/ ) )[2];
+    my $ext = ( File::Basename::fileparse( $local_file, 
+                                            qr/[A-Za-z0-9]+$/ ) )[2];
     
     # Copied mostly from MT::App::CMS
     
@@ -327,6 +330,7 @@ sub _process_transport {
     
 }
 
+
 sub print_transport_progress {
     my $plugin = shift;
     my ($app, $direction) = @_;
@@ -368,7 +372,7 @@ HTML
     # Add import link
     # $old = q{<$mt:var name="list_filter_form"$>};
     # $old = quotemeta($old);
-    # $new = q{<p id="create-new-link"><a class="icon-left icon-create" onclick="return openDialog(null, 'start_asshat_transporter', 'blog_id=<mt:var name="blog_id">')" href="javascript:void(0)"><__trans phrase="Transport Assets"></a></p>};
+    # $new = q{<p id="create-new-link"><a class="icon-left icon-create" onclick="return openDialog(null, 'start_asshat_transporter', 'blog_id=<mt:var name="blog_id">')" href="javascript:void(0)"><__trans phrase="Import Assets"></a></p>};
     # $$tmpl =~ s/($old)/$new\n$1/;
 }
 
