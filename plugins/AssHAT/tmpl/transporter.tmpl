@@ -1,4 +1,4 @@
-<mt:setvarblock name="page_title"><__trans phrase="Transport Assets"></mt:setvarblock>
+<mt:setvarblock name="page_title"><__trans phrase="Import Assets"></mt:setvarblock>
 <mt:setvarblock name="html_head" append="1">
     <style type="text/css" media="screen">
         .dialog #container, .dialog #content { overflow: visible; }
@@ -59,7 +59,7 @@
         id="path"
         label_class="top-label"
         label="<__trans phrase="Path">"
-        hint="<__trans phrase="Enter the full path to the file (or directory) you wish to transport">"
+        hint="<__trans phrase="Enter the full path to the file (or directory) you wish to Import">"
         show_hint="1">
             <div class="textarea-wrapper<mt:if name="readonly"> readonly</mt:if>"><input type="text" name="path" value="<mt:var name="path" escape="html">" id="path" class="full-width"<mt:if name="readonly"> readonly="true"</mt:if> /></div>
     </mtapp:setting>
@@ -80,11 +80,11 @@
             <__trans phrase="The path you have entered is a directory. Would you like to proceed?">
         </mtapp:statusmsg>
         
-        <p><label> <input type="radio" name="proceed" value="yes" id="proceed" onclick="toggleOpts(this.value)" /> <__trans phrase="Yes, transport all the files in [_1]" params="<code><mt:var name="path" escape="html"></code>"> </label></p>
+        <p><label> <input type="radio" name="proceed" value="yes" id="proceed" onclick="toggleOpts(this.value)" /> <__trans phrase="Yes, Import all the files in [_1]" params="<code><mt:var name="path" escape="html"></code>"> </label></p>
             
-        <p><label> <input type="radio" name="proceed" value="no_choose" id="proceed" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to choose the files to transport"> </label></p>
+        <p><label> <input type="radio" name="proceed" value="no_choose" id="proceed-choose" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to choose the files to Import"> </label></p>
         
-        <div id="files" style="display: none; margin: 10px 0;">
+        <div id="files" class="hidden" style="margin: 10px 0;">
             <mt:loop name="files">
                 <mt:if name="__first__">
                     <div class="listing">
@@ -111,7 +111,7 @@
             </mt:loop>
         </div>
         
-        <p><label> <input type="radio" name="proceed" value="no_ext" id="proceed" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to only transport files with a particular extension"> </label></p>
+        <p><label> <input type="radio" name="proceed" value="no_ext" id="proceed-extension" onclick="toggleOpts(this.value)" /><__trans phrase="No, I would like to only Import files with a particular extension"> </label></p>
         
         <div class="textarea-wrapper" id="ext-field" style="display: none; width: 60px;">.<input type="text" name="ext" value="<mt:var name="ext" escape="html">" id="ext" style="width: 50px" onblur="toggleOpts('no_ext');" /></div>
         
@@ -132,10 +132,10 @@
             <button
                 type="submit"
                 accesskey="s"
-                title="<__trans phrase="Transport (s)">"
+                title="<__trans phrase="Import (s)">"
                 class="primary-button"
                 id="transport-button"
-                ><__trans phrase="Transport"></button>
+                ><__trans phrase="Import"></button>
             </mt:if>
             <button
                 onclick="closeDialog(); return false"
